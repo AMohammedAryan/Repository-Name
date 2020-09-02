@@ -1,52 +1,58 @@
-var bullet, wall;
-var speed, weight;
-var damage;
-var thickness;
+const Engine = Matter.Engine;
+const World = Matter.World;
+const Bodies = Matter.Bodies;
+const Body = Matter.Body;
 
-function setup() {
-  createCanvas(1600,400);
+var crumbledPaper, dustbinBase, dustbinLeft, dustbinRight;
+var ground;
 
-  speed = random(223, 321);
-  weight = random(30, 52);
-  thickness = random(22, 83);
-
-  bullet = createSprite(50, 200, 60, 20);
-  bullet.shapeColor = "white";
-
-  wall = createSprite(1200, 200, thickness, 800);
-  wall.shapeColor = (80, 80, 80);
-
-  bullet.velocityX = speed;
-
+function preload()
+{
+	
 }
 
+function setup() {
+	createCanvas(800, 700);
+
+
+	engine = Engine.create();
+	world = engine.world;
+
+	//Create the Bodies Here.
+
+	crumbledPaper = new Paper(100, 450, 40);
+	dustbinBase = new Dustbin(650, 650, 160, 40);
+	dustbinLeft = new Dustbin(550, 640, 40, 160);
+	dustbinRight = new Dustbin(750, 640, 40, 160);
+
+	ground = new Ground();
+
+	Engine.run(engine);
+  
+}
+
+
 function draw() {
-  background("black");
 
+  Engine.update(engine);
 
-  if(isTouching()){
-    damage = 0.5 * weight * speed * speed / thickness * thickness * thickness
-    bullet.velocityX = 0;
+  rectMode(CENTER);
+  background(0);
 
-    if(damage < 10){
-      bullet.shapeColor = "green";
-    }
-    if(damage > 10){
-      bullet.shapeColor = "red";
-    }
-  }
+  crumbledPaper.display();
+  dustbinBase.display();
+  dustbinLeft.display();
+  dustbinRight.display();
+
+  ground.display();
+
+  //keyPressed();
   
   drawSprites();
 }
 
-function isTouching(){
-  if(wall.x - bullet.x < wall.width/2 + bullet.width/2
-     && bullet.x - wall.x < bullet.width/2 + wall.width/2
-     && wall.y -bullet.y < bullet.height/2 + wall.height/2
-     && bullet.y - wall.y = bullet.height/2 + wall.height/2){
-     return true;
-  }
-  else{
-     return false;
-  }
+function keyPressed(){
+
+	if(keyCode === UP_ARROW){
+		Body.applyForce(crumbledPaper.body, crumbledPaper.body.position, {x:65, y:-65});}
 }
